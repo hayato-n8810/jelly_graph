@@ -6,3 +6,4 @@ from .graph.build_callgraph import *
 from .graph.plot import *
 from .graph.trace import *
 from .find.match import *
+from .find.ql_function import *
