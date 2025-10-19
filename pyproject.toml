@@ -7,7 +7,12 @@ authors = [
     { name = "hayato-n8810", email = "s276185@wakayama-u.ac.jp" }
 ]
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "matplotlib>=3.10.7",
+    "networkx>=3.0",
+    "numpy>=1.24",
+    "scipy>=1.11",
+]
 
 [build-system]
 requires = ["hatchling"]
