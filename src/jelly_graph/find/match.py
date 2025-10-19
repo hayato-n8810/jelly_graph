@@ -21,13 +21,15 @@ def match_function(
     Returns:
         一致する関数ID、見つからない場合はNone
     """
-    # ファイルパスを正規化
-    target_path = Path(filepath).resolve()
+    # ファイルパスを正規化（先頭の/を削除）
+    target_path_str = str(filepath).lstrip("/")
     
-    # ファイルIDを探す
+    # ファイルIDを探す（相対パスで比較）
     target_file_id: FileID | None = None
     for file_id, file_path in jelly_obj.files.items():
-        if Path(file_path).resolve() == target_path:
+        # 両方のパスから先頭の/を削除して比較
+        normalized_file_path = str(file_path).lstrip("/")
+        if normalized_file_path == target_path_str:
             target_file_id = file_id
             break
     

@@ -7,3 +7,4 @@ from .graph.plot import *
 from .graph.trace import *
 from .find.match import *
 from .find.ql_function import *
+from .find.match_codeql import *
