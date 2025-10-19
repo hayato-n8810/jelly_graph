@@ -7,16 +7,33 @@ jelly_obj = jelly_graph.load_jelly(input_file)
 depend_map = jelly_graph.dependency_weights(jelly_obj)
 # コールグラフを構築
 callgraph = jelly_graph.build_callgraph(depend_map)
+
+load_codeql_file = "/Users/hayato-n/projects/jelly_graph/sample/ql_result.csv"
+matched_ids = jelly_graph.get_matched_function_ids(load_codeql_file, jelly_obj)
+print(f"マッチした関数ID数: {len(matched_ids)}")
+if matched_ids:
+    print(f"\n--- マッチした関数の詳細---")
+    for func_id in matched_ids:
+        print(f"\nFunctionID {func_id} の情報:")
+        loc = jelly_obj.functions[func_id]
+        filepath = jelly_obj.files[loc.fileid]
+        filename = Path(filepath).name
+        print(f"FunctionID {func_id}:")
+        print(f"  ファイル: {filename}")
+        print(f"  行範囲: {loc.startrow}-{loc.endrow}")
+        print(f"  位置: ({loc.startcolumn}, {loc.endcolumn})")
+
+
 # 特定の関数を検索
-target_func = jelly_graph.match_function(jelly_obj, "filepath", 1, 10)
+target_func = matched_ids[-1]
 
 # 呼び出し元・呼び出し先の経路を検索
 # パスの中に自分も入ることに注意\
 # 呼び出し元
-src_paths = jelly_graph.search_src(callgraph, jelly_obj, target_func=target_func)
+src_paths = jelly_graph.search_src(callgraph, jelly_obj, target_func_id=target_func)
 jelly_graph.print_src_trace_results(callgraph, jelly_obj, target_func, show_all_paths=True)
 # 呼び出し先
-dst_paths = jelly_graph.search_dst(callgraph, jelly_obj, target_func=target_func)
+dst_paths = jelly_graph.search_dst(callgraph, jelly_obj, target_func_id=target_func)
 jelly_graph.print_dst_trace_results(callgraph, jelly_obj, target_func, show_all_paths=True)
 
 # 特定の関数の依存関係を調査
